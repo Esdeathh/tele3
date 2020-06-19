@@ -103,7 +103,6 @@ public class Huffman {
             char c = encoded.charAt(i);
             tmp2 += c;
             if(map.get(tmp2) != null) {
-                System.out.println(tmp2);
                 decoded += map.get(tmp2);
                 tmp2 = "";
             }

@@ -6,15 +6,6 @@ import java.util.Map;
 
 public class App {
     public static void main(String[] args) throws IOException {
-        String text = "ala ma super kota";
-        Map<String, Character> map = Huffman.generateCodes(text);
-        String encoded = Huffman.encode(text);
-        String decoded = Huffman.decode(encoded, map);
-        System.out.println(map);
-        System.out.println(encoded);
-        System.out.println(decoded);
-
-
         TextIO textIO = TextIoFactory.getTextIO();
         String mode = textIO.newStringInputReader()
                 .withDefaultValue("s")

@@ -3,6 +3,10 @@ import org.beryx.textio.TextIoFactory;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Map;
 
 public class Client {
     private final String hostName = "127.0.0.1";
@@ -10,20 +14,30 @@ public class Client {
 
 
     public Client() throws IOException {
-        TextIO textIO = TextIoFactory.getTextIO();
+        String text = Files.readString(Paths.get("C:\\Users\\rados\\test.txt"), StandardCharsets.US_ASCII);
+        Map<String, Character> map = Huffman.generateCodes(text);
+        String encoded = Huffman.encode(text);
+        System.out.println("przed kodowaniem: " + text);
+        System.out.println("kody: " + map);
+        System.out.println("po kodowaniu: " + encoded);
+
         try (
                 Socket socket = new Socket(hostName, portNumber);
         ) {
-            File file = new File("C:\\Users\\rados\\test.txt");
-            byte[] buffer = new byte[4096];
-            InputStream in = new FileInputStream(file);
-            OutputStream out = socket.getOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            out.writeObject(map);
+        }
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-            int count;
-            while ((count = in.read(buffer)) > 0) {
-                out.write(buffer, 0, count);
-            }
-
+        try (
+                Socket socket = new Socket(hostName, portNumber);
+        ) {
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            out.writeObject(encoded);
         }
     }
 }
